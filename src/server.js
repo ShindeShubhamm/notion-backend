@@ -25,19 +25,20 @@ const corsOptions = {
     },
 };
 
-const clientId = process.env.NOTION_OAUTH_CLIENTID;
-const clientSecret = process.env.NOTION_OAUTH_CLIENTSECRET;
-
 router.get('/', (req, res) => {
     res.send({ message: 'Hello world!' });
 });
 
 router.get('/env', (req, res) => {
+    const clientId = process.env.NOTION_OAUTH_CLIENTID;
+    const clientSecret = process.env.NOTION_OAUTH_CLIENTSECRET;
     res.send({ clientId, clientSecret });
 });
 
 router.post('/accesstoken', async (req, res) => {
     const { code } = req.body;
+    const clientId = process.env.NOTION_OAUTH_CLIENTID;
+    const clientSecret = process.env.NOTION_OAUTH_CLIENTSECRET;
     const auth = dataToBase64(`${clientId}:${clientSecret}`);
     try {
         const response = await axios.post(
@@ -54,6 +55,7 @@ router.post('/accesstoken', async (req, res) => {
                 },
             }
         );
+        console.log(response.data);
         res.send(response.data);
     } catch (error) {
         res.status(error.response.status).send({ error: error.response });
