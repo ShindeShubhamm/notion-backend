@@ -56,7 +56,7 @@ router.post('/accesstoken', cors(corsOptions), async (req, res) => {
         );
         res.send(response.data);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({ error });
     }
 });
 
