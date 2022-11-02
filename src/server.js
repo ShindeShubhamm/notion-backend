@@ -32,6 +32,10 @@ router.get('/', (req, res) => {
     res.send({ message: 'Hello world!' });
 });
 
+router.get('/env', (req, res) => {
+    res.send({ clientId, clientSecret });
+});
+
 router.post('/accesstoken', cors(corsOptions), async (req, res) => {
     const { code } = req.body;
     const auth = dataToBase64(`${clientId}:${clientSecret}`);
