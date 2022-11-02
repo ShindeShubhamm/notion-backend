@@ -36,7 +36,7 @@ router.get('/env', (req, res) => {
     res.send({ clientId, clientSecret });
 });
 
-router.post('/accesstoken', cors(corsOptions), async (req, res) => {
+router.post('/accesstoken', async (req, res) => {
     const { code } = req.body;
     const auth = dataToBase64(`${clientId}:${clientSecret}`);
     try {
@@ -56,7 +56,7 @@ router.post('/accesstoken', cors(corsOptions), async (req, res) => {
         );
         res.send(response.data);
     } catch (error) {
-        res.status(error.response.status).send(error.response.statusText);
+        res.status(error.response.status).send({ error: error.response });
     }
 });
 
