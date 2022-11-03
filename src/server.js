@@ -3,7 +3,7 @@ const cors = require('cors');
 const express = require('express');
 const serverless = require('serverless-http');
 const { dataToBase64 } = require('./utils/helpers');
-// const { Client } = require('@notionhq/client');
+const { Client } = require('@notionhq/client');
 
 const app = express();
 const router = express.Router();
@@ -41,9 +41,6 @@ router.post('/accesstoken', cors(corsOptions), async (req, res) => {
     const clientId = process.env.NOTION_OAUTH_CLIENTID;
     const clientSecret = process.env.NOTION_OAUTH_CLIENTSECRET;
     const auth = dataToBase64(`${clientId}:${clientSecret}`);
-    console.log(auth);
-    console.log(clientId);
-    console.log(clientSecret);
     try {
         const response = await axios.post(
             'https://api.notion.com/v1/oauth/token',
@@ -72,8 +69,15 @@ router.get('/pagedata/:pageId', cors(corsOptions), async (req, res) => {
     const pageData = await client.pages.retrieve({
         page_id: req.params.pageId,
     });
-    console.log(pageData);
     res.send(pageData);
+});
+
+router.get('/search', cors(corsOptions), async (req, res) => {
+    const client = new Client({
+        auth: req.headers.authorization.replace('Bearer ', ''),
+    });
+    const searchData = await client.search();
+    res.send(searchData);
 });
 
 app.use('/', router);
