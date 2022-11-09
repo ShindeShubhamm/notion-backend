@@ -62,15 +62,36 @@ router.post('/accesstoken', cors(corsOptions), async (req, res) => {
     }
 });
 
-router.get('/pagedata/:pageId', cors(corsOptions), async (req, res) => {
-    const client = new Client({
-        auth: req.headers.authorization.replace('Bearer ', ''),
-    });
-    const pageData = await client.pages.retrieve({
-        page_id: req.params.pageId,
-    });
-    res.send(pageData);
-});
+router.get(
+    '/block_content/:blockId/children',
+    cors(corsOptions),
+    async (req, res) => {
+        const client = new Client({
+            auth: req.headers.authorization.replace('Bearer ', ''),
+        });
+        try {
+            const pageData = await client.blocks.children.list({
+                block_id: req.params.blockId,
+            });
+            res.send(pageData.results);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
+
+// router.get('/pages/:pageId/tabledata', cors(corsOptions), async (req, res) => {
+//     const client = new Client({
+//         auth: req.headers.authorization.replace('Bearer ', ''),
+//     });
+//     try {
+//         const pageData = await client.blocks.children.list({
+//             block_id: req.params.pageId,
+//         });
+//     } catch (error) {
+
+//     }
+// })
 
 router.get('/search', cors(corsOptions), async (req, res) => {
     const client = new Client({
